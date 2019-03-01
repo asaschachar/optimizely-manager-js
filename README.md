@@ -6,7 +6,7 @@
 ## Usage 
 At your application startup:
 ```
-const OptimizelyManager = require('optimizely-manager');
+const OptimizelyManager = require('optimizely-manager-node');
 const optimizely = new OptimizelyManager({
   sdkKey: 'Ly8FQj6vSaDcZUjySoWnWz'
 })
