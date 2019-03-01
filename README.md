@@ -1,12 +1,12 @@
 # Optimizely Datafile Manager Node
                                                                         
 ## Installation
- * `npm install --save `
+`npm install --save git+https://git@github.com/asaschachar/optimizely-manager-node.git`
  
 ## Usage 
 At your application startup:
 ```
-const OptimizelyManager = require('./optimizely-manager');
+const OptimizelyManager = require('optimizely-manager');
 const optimizely = new OptimizelyManager({
   sdkKey: 'Ly8FQj6vSaDcZUjySoWnWz'
 })
