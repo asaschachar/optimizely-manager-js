@@ -17,11 +17,11 @@ const optimizely = new OptimizelyManager({
 ## Usage
 When you want to use a feature flag:
 ```
-const enabled = optimizely.isFeatureEnabled('sale_price', userId);
+const enabled = optimizely.isFeatureEnabled('sale_price');
 ```                                                                     
                                                                         
 If you are using a feature flag in another file, get the optimizely instance first                                                                        
 ```
 const optimizely = OptimizelyManager.instance.getClient();
-const enabled = optimizely.isFeatureEnabled('sale_price', 'TEST_ID');
+const enabled = optimizely.isFeatureEnabled('sale_price');
 ```
