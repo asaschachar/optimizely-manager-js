@@ -5,7 +5,7 @@
 npm install --save git+https://git@github.com/asaschachar/optimizely-manager-node.git
 ```
  
-## Usage 
+## Setup 
 At your application startup:
 ```
 const OptimizelyManager = require('optimizely-manager-node');
@@ -13,6 +13,8 @@ const optimizely = new OptimizelyManager({
   sdkKey: 'Ly8FQj6vSaDcZUjySoWnWz'
 })
 ```
+
+## Usage
 When you want to use a feature flag:
 ```
 const enabled = optimizely.isFeatureEnabled('sale_price', userId);
