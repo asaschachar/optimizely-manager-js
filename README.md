@@ -1,7 +1,9 @@
 # Optimizely Datafile Manager Node
                                                                         
 ## Installation
-```npm install --save git+https://git@github.com/asaschachar/optimizely-manager-node.git```
+```
+npm install --save git+https://git@github.com/asaschachar/optimizely-manager-node.git
+```
  
 ## Usage 
 At your application startup:
