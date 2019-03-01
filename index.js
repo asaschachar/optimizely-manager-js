@@ -2,8 +2,7 @@
  * Optimizely Datafile Manager Node
  *
  * USAGE - INSTALLATION
- *   // Save this file in a file named optimizely-manager.js
- *   const OptimizelyManager = require('./optimizely-manager');
+ *   const OptimizelyManager = require('optimizely-manager-node');
  *   const optimizely = new OptimizelyManager({
  *     sdkKey: 'Ly8FQj6vSaDcZUjySoWnWz'
  *   })
@@ -14,7 +13,7 @@
  *   OR
  *
  *   const optimizely = OptimizelyManager.instance.getClient();
- *   const enabled = optimizely.isFeatureEnabled('sale_price', 'TEST_ID');
+ *   const enabled = optimizely.isFeatureEnabled('sale_price', userId);
  */
 const request = require('request-promise');
 const assert = require('assert');
