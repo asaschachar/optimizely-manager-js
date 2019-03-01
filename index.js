@@ -75,6 +75,9 @@ function OptimizelyManager({ sdkKey, debug, ...rest }) {
 
   return {
     isFeatureEnabled(...args) {
+      // Check to see if we need to generate a userId
+      if(args[1] === undefined) args[1] = Math.random().toString()
+
       return optimizelyClientInstance.isFeatureEnabled(...args);
     },
 
