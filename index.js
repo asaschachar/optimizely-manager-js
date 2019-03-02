@@ -54,7 +54,7 @@ function OptimizelyManager({ sdkKey, debug, ...rest }) {
     const DATAFILE_URL = `https://cdn.optimizely.com/datafiles/${sdkKey}.json`;
 
     request(DATAFILE_URL)
-      .then(async (latestDatafile) => {
+      .then((latestDatafile) => {
         try {
           assert.deepEqual(currentDatafile, latestDatafile)
         } catch (err) {
