@@ -81,7 +81,7 @@ function OptimizelyManager({ sdkKey, debug, ...rest }) {
     },
 
     getClient() {
-      return optimizelyClientInstance;
+      return this;
     }
   }
 }
