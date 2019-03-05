@@ -20,7 +20,11 @@ When you want to use a feature flag:
 const enabled = optimizely.isFeatureEnabled('sale_price');
 ```                                                                     
                                                                         
-If you are using a feature flag in another file, get the optimizely instance first                                                                        
+If you are using a feature flag in another file, get the optimizely instance first after requiring the manager
+```
+const OptimizelyManager = require('optimizely-manager-node');
+```
+Then:
 ```
 const optimizely = OptimizelyManager.instance.getClient();
 const enabled = optimizely.isFeatureEnabled('sale_price');
