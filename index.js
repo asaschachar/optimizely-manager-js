@@ -41,7 +41,7 @@ function OptimizelyManager({ sdkKey, debug, ...rest }) {
         TODO: Enable a blocking for Optimizely through the manager
       `;
       if (debug) {
-        throw new Error(UNIINITIALIZED_ERROR)
+        logger.log(LOG_LEVEL.ERROR, UNIINITIALIZED_ERROR)
       } else {
         logger.log(LOG_LEVEL.DEBUG, UNIINITIALIZED_ERROR)
       }
