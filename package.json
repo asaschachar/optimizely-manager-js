@@ -1,6 +1,6 @@
 {
   "name": "optimizely-manager-node",
-  "version": "1.0.0",
+  "version": "2.1.1",
   "description": "",
   "main": "optimizely-manager.js",
   "scripts": {
@@ -13,5 +13,12 @@
     "@optimizely/optimizely-sdk": "^3.0.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "rollup": "^1.4.1",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-node-resolve": "^4.0.1"
   }
 }
