@@ -11,7 +11,7 @@ const defaultLogger = require('@optimizely/optimizely-sdk/lib/plugins/logger');
 const LOG_LEVEL = require('@optimizely/optimizely-sdk/lib/utils/enums').LOG_LEVEL;
 
 class OptimizelyManager {
-  constructor({ sdkKey, logLevel, ...rest }) {
+  constructor({ sdkKey, logLevel, datafileOptions, ...rest }) {
     let currentDatafile = {};
 
     logLevel = logLevel || LOG_LEVEL.DEBUG;
@@ -44,7 +44,7 @@ class OptimizelyManager {
           try {
             assert.deepEqual(currentDatafile, latestDatafile)
           } catch (err) {
-            logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Received an updated datafile and is re-initializing')
+            logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Received an updated datafile. Re-initializing client with latest feature flag configuration')
             // The datafile is different! Let's re-instantiate the client
             this.optimizelyClientInstance = optimizely.createInstance({
               datafile: latestDatafile,
@@ -60,7 +60,11 @@ class OptimizelyManager {
   }
 
   isFeatureEnabled(featureKey, userId) {
-    userId = userId || Math.random().toString()
+    if (!userId) {
+      userId = userId || Math.random().toString()
+      logger.log(LOG_LEVEL.INFO, `MANAGER: No userID passed to isFeatureEnabled. Using random string '${userId}' instead.`)
+    }
+
     return this.optimizelyClientInstance.isFeatureEnabled(featureKey, userId);
   }
 }
