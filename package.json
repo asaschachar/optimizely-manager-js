@@ -1,6 +1,6 @@
 {
   "name": "optimizely-manager-node",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "",
   "main": "optimizely-manager.js",
   "scripts": {
@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@optimizely/optimizely-sdk": "^3.0.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
   },
