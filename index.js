@@ -53,8 +53,8 @@ class OptimizelyManager {
       datafileOptions,
       ...rest
     };
-    logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Loading Optimizely Manager');
-    this.optimizelyClientInstance = !datafile ? new UninitializedClient(logger, logLevel) : sdk.createInstance({
+    this.logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Loading Optimizely Manager');
+    this.optimizelyClientInstance = !datafile ? new UninitializedClient(this.logger, logLevel) : sdk.createInstance({
       datafile: datafile,
       ...this.sdkOptions
     });
@@ -83,7 +83,7 @@ class OptimizelyManager {
     const isNewDatafile = Number(this.latestDatafile.revision) > Number(this.currentDatafile.revision) || !this.currentDatafile.revision;
 
     if (isNewDatafile) {
-      logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Received an updated datafile. Re-initializing client with latest feature flag settings');
+      this.logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Received an updated datafile. Re-initializing client with latest feature flag settings');
       this.optimizelyClientInstance = sdk.createInstance({
         datafile: latestDatafile,
         ...this.sdkOptions
@@ -106,7 +106,7 @@ class OptimizelyManager {
   isFeatureEnabled(featureKey, userId) {
     if (!userId) {
       userId = userId || Math.random().toString();
-      logger.log(LOG_LEVEL.INFO, `MANAGER: Using random string '${userId}' for userId. `);
+      this.logger.log(LOG_LEVEL.INFO, `MANAGER: Using random string '${userId}' for userId. `);
     }
 
     return this.optimizelyClientInstance.isFeatureEnabled(featureKey, userId);
