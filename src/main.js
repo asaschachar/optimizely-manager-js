@@ -42,11 +42,11 @@ class OptimizelyManager {
     logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Loading Optimizely Manager');
 
     this.optimizelyClientInstance = !datafile
-     ? new UninitializedClient(logger, logLevel);
-     : sdk.createInstance(
+     ? new UninitializedClient(logger, logLevel)
+     : sdk.createInstance({
         datafile: datafile,
         ...this.sdkOptions
-      );
+     });
 
 
     const datafileUrl = datafileOptions && datafileOptions.getUrl
@@ -66,7 +66,7 @@ class OptimizelyManager {
    * Requests the Optimizely datafile from the provided Url
    * @param {string} datafileUrl string identifying the feature. Created in the Optimizely interface
    */
-  _requestDatafile(datafileUrl) {
+  async _requestDatafile(datafileUrl) {
     // TODO: CHANGE BASED ON PACKAGE TO FETCH
     const request = require('request-promise');
     let latestDatafile = await request(datafileUrl)
@@ -74,10 +74,10 @@ class OptimizelyManager {
     const isNewDatafile = (Number(this.latestDatafile.revision) > Number(this.currentDatafile.revision)) || !this.currentDatafile.revision
     if (isNewDatafile) {
       logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Received an updated datafile. Re-initializing client with latest feature flag settings')
-      this.optimizelyClientInstance = sdk.createInstance(
+      this.optimizelyClientInstance = sdk.createInstance({
         datafile: latestDatafile,
         ...this.sdkOptions
-      );
+      });
       this.currentDatafile = latestDatafile;
     }
 
