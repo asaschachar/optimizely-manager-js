@@ -90,17 +90,16 @@ class OptimizelyManager {
     const latestRevision = Number(latestDatafile.revision);
     const currentRevision = Number(this.currentDatafile.revision);
     const isNewDatafile = latestRevision > currentRevision || !this.currentDatafile.revision;
-    this.logger.log(this.LOG_LEVELS.DEBUG, `MANAGER: Latest datafile revision ${latestRevision}. Current datafile revision ${currentRevision}.`);
 
     if (isNewDatafile) {
-      this.logger.log(this.LOG_LEVELS.DEBUG, 'MANAGER: Received an updated datafile. Re-initializing client with latest feature flag settings');
+      this.logger.log(this.LOG_LEVELS.INFO, `MANAGER: Latest datafile revision ${latestRevision}. Current datafile revision ${currentRevision}. Updating Optimizely client`);
       this.optimizelyClientInstance = this.sdk.createInstance({
         datafile: latestDatafile,
         ...this.sdkOptions
       });
       this.currentDatafile = latestDatafile;
     } else {
-      this.logger.log(this.LOG_LEVELS.DEBUG, 'MANAGER: Did not receive updated datafile');
+      this.logger.log(this.LOG_LEVELS.DEBUG, `MANAGER: Latest datafile revision ${latestRevision}. Current datafile revision ${currentRevision}. Not updating Optimizely client.`);
     }
 
     return this.currentDatafile;
