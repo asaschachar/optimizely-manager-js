@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-const request = require('request-promise'); // TODO: DEPENDS ON NODE
-const assert = require('assert'); // TODO: DEPENDS ON NODE 
-const optimizelySdk = require('@optimizely/optimizely-sdk');
-const defaultLogger = require('@optimizely/optimizely-sdk/lib/plugins/logger');
-const LOG_LEVEL = require('@optimizely/optimizely-sdk/lib/utils/enums').LOG_LEVEL;
-
 /**
  * OptimizelyManager
  *
@@ -29,61 +23,65 @@ const LOG_LEVEL = require('@optimizely/optimizely-sdk/lib/utils/enums').LOG_LEVE
  * The OptimizelyManager is not required to use the Optimizely SDK, but it is
  * available as a convenience to provide helpful defaults.
  *
- * @param {Object} sdk An optimizely-sdk object. Install with `npm install --save @optimizely/optimizely-sdk`
- * @param {Object} options SDK options to be passed to the createInstance method of the SDK
- * @param {String} options.logLevel Level of the logger used by the manager and the SDK
- * @param {Object} options.datafileOptions options to control how and when the manager tries to fetch the datafile
- * @param {Integer} options.datafileOptions.pollingInterval seconds to wait before trying to fetcha new datafile
+ * @constructor
+ * @param {Object}   sdk An optimizely-sdk object. Install with `npm install --save @optimizely/optimizely-sdk`
+ * @param {Object}   options SDK options to be passed to the createInstance method of the SDK
+ * @param {string}   options.logLevel Level of the logger used by the manager and the SDK
+ * @param {Object}   options.datafileOptions options to control how and when the manager tries to fetch the datafile
+ * @param {number}   options.datafileOptions.updateInterval seconds to wait before trying to fetch a new datafile
+ * @param {boolean}  options.datafileOptions.liveUpdates when true, the optimizely client will continuously update to the latest datafile available
+ * @param {Function} options.datafileOptions.getUrl function which will be given SDK as an argument and should return the url from which datafiles can be fetched
  */
 class OptimizelyManager {
-  constructor(sdk, { sdkKey, logLevel, datafileOptions, ...rest }) {
-    let currentDatafile = {};
-
-    logLevel = logLevel || LOG_LEVEL.DEBUG;
-    let logger = defaultLogger.createLogger({ logLevel })
+  constructor(sdk, { sdkKey, datafile, logLevel, datafileOptions, ...rest }) {
+    this.currentDatafile = datafile || {};
+    this.logLevel = logLevel || sdk.enums.LOG_LEVEL.DEBUG;
+    this.logger = sdk.logging.createLogger({ logLevel })
+    this.sdkOptions = { sdkKey, logger, datafileOptions, ...rest }
 
     logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Loading Optimizely Manager');
 
-    this.optimizelyClientInstance = {
-      isFeatureEnabled() {
-        const UNIINITIALIZED_ERROR = `MANAGER: isFeatureEnabled called but Optimizely not yet initialized.
+    this.optimizelyClientInstance = !datafile
+     ? new UninitializedClient(logger, logLevel);
+     : sdk.createInstance(
+        datafile: datafile,
+        ...this.sdkOptions
+      );
 
-          If you just started a web application or app server, try the request again.
 
-          OR try moving your OptimizelyManager initialization higher in your application startup code
-          OR move your isFeatureEnabled call later in your application lifecycle.
+    const datafileUrl = datafileOptions && datafileOptions.getUrl
+      ? datafileOptions.getUrl(sdkKey)
+      : this._getDefaultUrl(sdkKey)
 
-          If this error persists, contact Optimizely!
-        `;
+    this._requestDatafile(datafileUrl)
 
-        logger.log(LOG_LEVEL.ERROR, UNIINITIALIZED_ERROR)
-      }
+    const liveUpdates = datafileOptions && datafileOptions.liveUpdates
+    if (liveUpdates) {
+      const updateInterval = datafileOptions && datafileOptions.updateInterval || 1000
+      setInterval(this._requestDatafile.bind(this, datafileUrl), updateInterval);
+    }
+  }
+
+  /**
+   * Requests the Optimizely datafile from the provided Url
+   * @param {string} datafileUrl string identifying the feature. Created in the Optimizely interface
+   */
+  _requestDatafile(datafileUrl) {
+    // TODO: CHANGE BASED ON PACKAGE TO FETCH
+    const request = require('request-promise');
+    let latestDatafile = await request(datafileUrl)
+
+    const isNewDatafile = (Number(this.latestDatafile.revision) > Number(this.currentDatafile.revision)) || !this.currentDatafile.revision
+    if (isNewDatafile) {
+      logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Received an updated datafile. Re-initializing client with latest feature flag settings')
+      this.optimizelyClientInstance = sdk.createInstance(
+        datafile: latestDatafile,
+        ...this.sdkOptions
+      );
+      this.currentDatafile = latestDatafile;
     }
 
-    function pollForDatafile() {
-      // Request the datafile every second. If the datafile has changed
-      // since the last time we've seen it, then re-instantiate the client
-      const DATAFILE_URL = `https://cdn.optimizely.com/datafiles/${sdkKey}.json`;
-
-      request(DATAFILE_URL)
-        .then((latestDatafile) => {
-          try {
-            assert.deepEqual(currentDatafile, latestDatafile)
-          } catch (err) {
-            logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Received an updated datafile. Re-initializing client with latest feature flag settings')
-            this.optimizelyClientInstance = sdk.createInstance({
-              datafile: latestDatafile,
-              logger,
-              ...rest
-            });
-            currentDatafile = latestDatafile;
-            resolve(currentDatafile)
-          }
-        })
-    }
-
-    const interval = datafileOptions && datafileOptions.pollingInterval || 1000
-    setInterval(pollForDatafile, datafileOptions.pollingInterval);
+    return this.currentDatafile
   }
 
   /**
@@ -91,8 +89,8 @@ class OptimizelyManager {
    *
    * Wraps the Optimizely SDK's isFeatureEnabled method with convenient defaults
    *
-   * @params {string} featureKey string identifying the feature. Created in the Optimizely interface
-   * @params {string} userId unique string identifying the user
+   * @param {string} featureKey string identifying the feature. Created in the Optimizely interface
+   * @param {string} userId unique string identifying the user
    */
   isFeatureEnabled(featureKey, userId) {
     if (!userId) {
@@ -101,6 +99,49 @@ class OptimizelyManager {
     }
 
     return this.optimizelyClientInstance.isFeatureEnabled(featureKey, userId);
+  }
+
+  /**
+   * _getDefaultUrl
+   *
+   * Provides the standard Optimizely url to the datafile
+   *
+   * @param {string} sdkKey sdk key for the given project / environment
+   */
+  _getDefaultUrl(sdkKey) {
+    return `https://cdn.optimizely.com/datafiles/${sdkKey}.json`;
+  }
+}
+
+/**
+ * UninitializedClient
+ *
+ * Class used as an interim client instance until Optimizely is fully initialized
+ * available across an application.
+ *
+ * @constructor
+ * @param {Object} options
+ * @param {Object} options.logger logger instance
+ * @param {Object} options.logLevel log level
+ */
+class UninitializedClient {
+  constructor(logger, logLevel) {
+    this.logger = logger
+    this.logLevel = logLevel
+  }
+
+  isFeatureEnabled(featureKey, userId) {
+    const UNIINITIALIZED_ERROR = `MANAGER: isFeatureEnabled called but Optimizely not yet initialized.
+
+      If you just started a web application or app server, try the request again.
+
+      OR try moving your OptimizelyManager initialization higher in your application startup code
+      OR move your isFeatureEnabled call later in your application lifecycle.
+
+      If this error persists, contact Optimizely!
+    `;
+
+    this.logger.log(this.logLevel, UNIINITIALIZED_ERROR)
   }
 }
 
@@ -115,8 +156,7 @@ class Singleton {
    * configure
    *
    * Configures the Optimizely SDK with the provided settings.
-   *
-   * @params (same as parameters for the OptimizelyManager above
+   * @param (same as parameters for the OptimizelyManager above)
    */
   configure(...args) {
     if (!this.sdk) {
@@ -129,7 +169,7 @@ class Singleton {
    * withSdk
    *
    * Indicates to the OptimizelyManager which version of the Optimizely sdk to use
-   * @param {Object} sdk An optimizely-sdk object. Install with `npm install --save @optimizely/optimizely-sdk`
+   * @param {Object} sdk An optimizely-sdk object. Install the sdk with `npm install --save @optimizely/optimizely-sdk`
    */
   withSdk(sdk) {
     this.sdk = sdk;
@@ -139,7 +179,7 @@ class Singleton {
    * getClient
    *
    * Get a reference to the singleton OptimizelyManager instance
-   * @returns an OptimizelyManager instance
+   * @returns {Object} an OptimizelyManager instance
    */
   getClient() {
     return this.instance;
