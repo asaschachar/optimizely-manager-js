@@ -10,8 +10,8 @@ At your application startup:
 ```javascript
 const OptimizelySdk = require('@optimizely/optimizely-sdk');
 const OptimizelyManager = require('@optimizely/optimizely-manager');
-OptimizelyManager.withSdk(OptimizelySdk);
 
+OptimizelyManager.withSdk(OptimizelySdk);
 OptimizelyManager.configure({
   logLevel: 0,
   sdkKey: 'Ly8FQj6vSaDcZUjySoWnWz',
