@@ -25,3 +25,12 @@ If you are using a feature flag in another file, get the optimizely instance fir
 const optimizely = OptimizelyManager.instance.getClient();
 const enabled = optimizely.isFeatureEnabled('sale_price');
 ```
+## TODO
+- Polish doc strings
+- Ensure basic datafile configuration is available like live updates and pollingInterval
+- Build node & web packages from the same source
+- Wrap localStorage in check of whether it exists
+- Add tests and attempt to get to 100% unit test coverage
+
+
+- Start separate ticket on figuring out how to put datafile on window variable
