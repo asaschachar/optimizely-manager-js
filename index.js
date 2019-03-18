@@ -83,8 +83,14 @@ class OptimizelyManager {
     // TODO: CHANGE BASED ON PACKAGE TO FETCH
     const request = require('request-promise');
 
-    let latestDatafile = await request(datafileUrl);
-    const isNewDatafile = Number(latestDatafile.revision) > Number(this.currentDatafile.revision) || !this.currentDatafile.revision;
+    let latestDatafile = await request({
+      uri: datafileUrl,
+      json: true
+    });
+    const latestRevision = Number(latestDatafile.revision);
+    const currentRevision = Number(this.currentDatafile.revision);
+    const isNewDatafile = latestRevision > currentRevision || !this.currentDatafile.revision;
+    this.logger.log(this.LOG_LEVELS.DEBUG, `MANAGER: Latest datafile revision ${latestRevision}. Current datafile revision ${currentRevision}.`);
 
     if (isNewDatafile) {
       this.logger.log(this.LOG_LEVELS.DEBUG, 'MANAGER: Received an updated datafile. Re-initializing client with latest feature flag settings');
@@ -93,6 +99,8 @@ class OptimizelyManager {
         ...this.sdkOptions
       });
       this.currentDatafile = latestDatafile;
+    } else {
+      this.logger.log(this.LOG_LEVELS.DEBUG, 'MANAGER: Did not receive updated datafile');
     }
 
     return this.currentDatafile;
