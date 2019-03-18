@@ -60,7 +60,12 @@ class OptimizelyManager {
     this._requestDatafile(datafileUrl)
 
     // TODO: Ensure it starts as false for browser
-    const liveUpdates = (datafileOptions && datafileOptions.liveUpdates) || true
+    const liveUpdateSetting = datafileOptions && datafileOptions.liveUpdates
+    let liveUpdates = true
+    if (typeof liveUpdateSetting === 'boolean') {
+      liveUpdates = liveUpdateSetting
+    }
+
     if (liveUpdates) {
       const updateInterval = (datafileOptions && datafileOptions.updateInterval) || 1000
       setInterval(this._requestDatafile.bind(this, datafileUrl), updateInterval);
