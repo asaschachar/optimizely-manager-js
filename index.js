@@ -42,6 +42,7 @@ class OptimizelyManager {
     datafileOptions,
     ...rest
   }) {
+    this.sdk = sdk;
     this.currentDatafile = datafile || {};
     this.logLevel = logLevel || sdk.enums.LOG_LEVEL.DEBUG;
     this.LOG_LEVELS = sdk.enums.LOG_LEVEL;
@@ -82,11 +83,11 @@ class OptimizelyManager {
     const request = require('request-promise');
 
     let latestDatafile = await request(datafileUrl);
-    const isNewDatafile = Number(this.latestDatafile.revision) > Number(this.currentDatafile.revision) || !this.currentDatafile.revision;
+    const isNewDatafile = Number(latestDatafile.revision) > Number(this.currentDatafile.revision) || !this.currentDatafile.revision;
 
     if (isNewDatafile) {
       this.logger.log(this.LOG_LEVELS.DEBUG, 'MANAGER: Received an updated datafile. Re-initializing client with latest feature flag settings');
-      this.optimizelyClientInstance = sdk.createInstance({
+      this.optimizelyClientInstance = this.sdk.createInstance({
         datafile: latestDatafile,
         ...this.sdkOptions
       });
