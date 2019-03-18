@@ -92,7 +92,7 @@ class OptimizelyManager {
     const isNewDatafile = latestRevision > currentRevision || !this.currentDatafile.revision;
 
     if (isNewDatafile) {
-      this.logger.log(this.LOG_LEVELS.INFO, `MANAGER: Latest datafile revision ${latestRevision}. Current datafile revision ${currentRevision}. Updating Optimizely client`);
+      this.logger.log(this.LOG_LEVELS.INFO, `MANAGER: Latest datafile revision ${latestRevision}. Current datafile revision ${currentRevision}. Updating Optimizely client with latest feature configuration`);
       this.optimizelyClientInstance = this.sdk.createInstance({
         datafile: latestDatafile,
         ...this.sdkOptions
