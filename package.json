@@ -1,5 +1,5 @@
 {
-  "name": "optimizely-manager-node",
+  "name": "@optimizely/optimizely-manager",
   "version": "3.0.0",
   "description": "",
   "main": "optimizely-manager.js",
