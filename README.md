@@ -21,15 +21,10 @@ OptimizelyManager.configure({
 ## Usage
 When you want to use a feature flag:
 ```javascript
-const optimizely = OptimizelyManager.getClien();
+const optimizely = OptimizelyManager.getClient();
 const enabled = optimizely.isFeatureEnabled('sale_price');
 ```                                                                     
-                                                                        
-If you are using a feature flag in another file, get the optimizely instance first                                                                        
-```javascript
-const optimizely = OptimizelyManager.instance.getClient();
-const enabled = optimizely.isFeatureEnabled('sale_price');
-```
+
 ## TODO
 - Build node & web packages from the same source
 - Wrap localStorage in check of whether it exists
