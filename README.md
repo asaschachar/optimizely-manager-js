@@ -2,7 +2,7 @@
                                                                         
 ## Installation
 ```
-npm install --save git+https://git@github.com/asaschachar/optimizely-manager-js.git#v4.0.0
+npm install --save git+https://git@github.com/asaschachar/optimizely-manager-js.git#v3.0.1
 ```
  
 ## Setup 
