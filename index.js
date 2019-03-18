@@ -63,9 +63,10 @@ class OptimizelyManager {
     });
     const datafileUrl = datafileOptions && datafileOptions.getUrl ? datafileOptions.getUrl(sdkKey) : this._getDefaultUrl(sdkKey);
 
-    this._requestDatafile(datafileUrl);
+    this._requestDatafile(datafileUrl); // TODO: Ensure it starts as false for browser
 
-    const liveUpdates = datafileOptions && datafileOptions.liveUpdates;
+
+    const liveUpdates = datafileOptions && datafileOptions.liveUpdates || true;
 
     if (liveUpdates) {
       const updateInterval = datafileOptions && datafileOptions.updateInterval || 1000;
