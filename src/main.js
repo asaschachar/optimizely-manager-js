@@ -36,7 +36,9 @@ class OptimizelyManager {
   constructor(sdk, { sdkKey, datafile, logLevel, datafileOptions, ...rest }) {
     this.currentDatafile = datafile || {};
     this.logLevel = logLevel || sdk.enums.LOG_LEVEL.DEBUG;
-    this.logger = sdk.logging.createLogger({ logLevel })
+    const logger = sdk.logging.createLogger({ logLevel })
+
+    this.logger = logger
     this.sdkOptions = { sdkKey, logger, datafileOptions, ...rest }
 
     this.logger.log(LOG_LEVEL.DEBUG, 'MANAGER: Loading Optimizely Manager');

@@ -44,9 +44,10 @@ class OptimizelyManager {
   }) {
     this.currentDatafile = datafile || {};
     this.logLevel = logLevel || sdk.enums.LOG_LEVEL.DEBUG;
-    this.logger = sdk.logging.createLogger({
+    const logger = sdk.logging.createLogger({
       logLevel
     });
+    this.logger = logger;
     this.sdkOptions = {
       sdkKey,
       logger,
