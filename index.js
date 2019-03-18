@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+const request = require('request-promise');
 /**
  * OptimizelyManager
  *
@@ -34,6 +34,8 @@
  * @param {boolean}  options.datafileOptions.liveUpdates when true, the optimizely client will continuously update to the latest datafile available
  * @param {Function} options.datafileOptions.getUrl function which will be given SDK as an argument and should return the url from which datafiles can be fetched
  */
+
+
 class OptimizelyManager {
   constructor(sdk, {
     sdkKey,
@@ -63,11 +65,11 @@ class OptimizelyManager {
     });
     const datafileUrl = datafileOptions && datafileOptions.getUrl ? datafileOptions.getUrl(sdkKey) : this._getDefaultUrl(sdkKey);
 
-    this._requestDatafile(datafileUrl); // TODO: Ensure it starts as false for browser
+    this._requestDatafile(datafileUrl);
 
+    const liveUpdateSetting = datafileOptions && datafileOptions.liveUpdates; // Default liveUpdating to be on in the node environment, not on in the browser environment
 
-    const liveUpdateSetting = datafileOptions && datafileOptions.liveUpdates;
-    let liveUpdates = true;
+    let liveUpdates = !false;
 
     if (typeof liveUpdateSetting === 'boolean') {
       liveUpdates = liveUpdateSetting;
@@ -81,17 +83,12 @@ class OptimizelyManager {
   /**
    * Requests the Optimizely datafile from the provided Url
    * @param {string} datafileUrl string identifying the feature. Created in the Optimizely interface
+   * @returns {Object} JSON representing the Optimizely datafile
    */
 
 
   async _requestDatafile(datafileUrl) {
-    // TODO: CHANGE BASED ON PACKAGE TO FETCH
-    const request = require('request-promise');
-
-    let latestDatafile = await request({
-      uri: datafileUrl,
-      json: true
-    });
+    let latestDatafile = await this._fetchJSON(datafileUrl);
     const latestRevision = Number(latestDatafile.revision);
     const currentRevision = Number(this.currentDatafile.revision);
     const isNewDatafile = latestRevision > currentRevision || !this.currentDatafile.revision;
@@ -108,6 +105,22 @@ class OptimizelyManager {
     }
 
     return this.currentDatafile;
+  }
+  /**
+   * Fetches json from a provided url.
+   * Uses the correct package depending on the environment
+   * @param {string} url indicating where to fetch json from
+   * @returns {Promise} resolved with the json
+   */
+
+
+  _fetchJSON(url) {
+    {
+      return request({
+        uri: url,
+        json: true
+      });
+    }
   }
   /**
    * isFeatureEnabled
