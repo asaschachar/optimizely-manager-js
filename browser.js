@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const request = require('request-promise');
+
 /**
  * OptimizelyManager
  *
@@ -34,8 +34,6 @@ const request = require('request-promise');
  * @param {boolean}  options.datafileOptions.liveUpdates when true, the optimizely client will continuously update to the latest datafile available
  * @param {Function} options.datafileOptions.getUrl function which will be given SDK as an argument and should return the url from which datafiles can be fetched
  */
-
-
 class OptimizelyManager {
   constructor(sdk, {
     sdkKey,
