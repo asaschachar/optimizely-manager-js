@@ -47,7 +47,9 @@ class OptimizelyManager {
     this.logger.log(this.LOG_LEVELS.DEBUG, 'MANAGER: Loading Optimizely Manager');
 
     const cachedDatafile = this._loadCachedDatafile(sdkKey);
-    this.optimizelyClientInstance = (!datafile && !cachedDatafile)
+    datafile = datafile || cachedDatafile
+
+    this.optimizelyClientInstance = !datafile
      ? new UninitializedClient(this.logger, this.LOG_LEVELS)
      : sdk.createInstance({ datafile: datafile, ...this.sdkOptions });
 
