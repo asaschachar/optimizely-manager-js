@@ -6,7 +6,7 @@
  */
 export const fetchJSON = (url) => {
   if (process.browser) {
-    return window.fetch(url).then((response) => (response.json()))
+    const fetchPromise = window.fetch(url).then((response) => (response.json()))
   } else {
     const request = require('request-promise');
     return request({ uri: url, json: true })
@@ -22,6 +22,7 @@ export const fetchJSON = (url) => {
  */
 export const loadCachedDatafile = (sdkKey) => {
   if (process.browser) {
+    console.log(window.localStorage.getItem)
     return JSON.parse(window.localStorage.getItem(`optimizelyDatafile-${sdkKey}`))
   }
 }
@@ -35,6 +36,7 @@ export const loadCachedDatafile = (sdkKey) => {
  */
 export const cacheDatafile = (sdkKey, datafile) => {
   if (process.browser) {
+    console.log(window.localStorage.setItem)
     window.localStorage.setItem(`optimizelyDatafile-${sdkKey}`, JSON.stringify(datafile))
   }
 }
