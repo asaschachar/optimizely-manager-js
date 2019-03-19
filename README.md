@@ -1,5 +1,8 @@
 # Optimizely Datafile Manager JavaScript (Node & Browser)
 
+[![Travis CI](https://img.shields.io/travis/asaschachar/optimizely-manager-js.svg)](https://travis-ci.org/asaschachar/optimizely-manager-js)
+
+
 ## Installation
 ```
 npm install --save git+https://git@github.com/asaschachar/optimizely-manager-js.git#v3.0.1
