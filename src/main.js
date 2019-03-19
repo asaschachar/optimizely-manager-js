@@ -32,6 +32,15 @@
  * @param {boolean}  options.datafileOptions.liveUpdates when true, the optimizely client will continuously update to the latest datafile available
  * @param {Function} options.datafileOptions.getUrl function which will be given SDK as an argument and should return the url from which datafiles can be fetched
  */
+
+import {
+  fetchJSON,
+  cacheDatafile,
+  loadCachedDatafile,
+  getDefaultUrl,
+  pollForDatafile,
+} from './helpers.js'
+
 class OptimizelyManager {
   constructor(sdk, { sdkKey, datafile, logLevel, datafileOptions, ...rest }) {
     this.sdk = sdk;
@@ -42,10 +51,15 @@ class OptimizelyManager {
 
     this.logger = logger
     this.sdkOptions = { sdkKey, logger, datafileOptions, ...rest }
-
     this.logger.log(this.LOG_LEVELS.DEBUG, 'MANAGER: Loading Optimizely Manager');
 
-    const cachedDatafile = this._loadCachedDatafile(sdkKey);
+    let cachedDatafile;
+    try {
+      cachedDatafile = loadCachedDatafile(sdkKey);
+    } catch (error) {
+      this.logger.log(this.LOG_LEVELS.DEBUG, `MANAGER: Unable to parse cached datafile json. Try clearing your localStorage. Received error: ${error}`)
+    }
+
     datafile = datafile || cachedDatafile
 
     this.optimizelyClientInstance = !datafile
@@ -55,7 +69,7 @@ class OptimizelyManager {
 
     const datafileUrl = datafileOptions && datafileOptions.getUrl
       ? datafileOptions.getUrl(sdkKey)
-      : this._getDefaultUrl(sdkKey)
+      : getDefaultUrl(sdkKey)
 
     this._requestDatafile(datafileUrl)
 
@@ -68,7 +82,7 @@ class OptimizelyManager {
 
     if (liveUpdates) {
       const updateInterval = (datafileOptions && datafileOptions.updateInterval) || 1000
-      setInterval(this._requestDatafile.bind(this, datafileUrl), updateInterval);
+      this.datafileRequestInterval = pollForDatafile(this._requestDatafile.bind(this, datafileUrl), updateInterval);
     }
   }
 
@@ -78,71 +92,27 @@ class OptimizelyManager {
    * @returns {Object} JSON representing the Optimizely datafile
    */
   async _requestDatafile(datafileUrl) {
-    let latestDatafile = await this._fetchJSON(datafileUrl)
+    let latestDatafile = await fetchJSON(datafileUrl)
     const latestRevision = Number(latestDatafile.revision)
     const currentRevision = Number(this.currentDatafile.revision)
+
     // TODO: Ensure that the datafile is for the same sdkKey!!! Otherwise may get datafiles which never update
     const isNewDatafile = (latestRevision > currentRevision) || !this.currentDatafile.revision
     if (isNewDatafile) {
       this.logger.log(this.LOG_LEVELS.INFO, `MANAGER: Latest datafile revision ${latestRevision}. Current datafile revision ${currentRevision}. Updating Optimizely client with latest feature configuration`)
+
       this.optimizelyClientInstance = this.sdk.createInstance({
         datafile: latestDatafile,
         ...this.sdkOptions
       });
+
       this.currentDatafile = latestDatafile;
-      this._cacheDatafile(this.sdkOptions.sdkKey, latestDatafile)
+      cacheDatafile(this.sdkOptions.sdkKey, latestDatafile)
     } else {
       this.logger.log(this.LOG_LEVELS.DEBUG, `MANAGER: Latest datafile revision ${latestRevision}. Current datafile revision ${currentRevision}. Not updating Optimizely client.`)
     }
 
     return this.currentDatafile
-  }
-
-  /**
-   * Fetches json from a provided url.
-   * Uses the correct package depending on the environment
-   * @param {string} url indicating where to fetch json from
-   * @returns {Promise} resolved with the json
-   */
-  _fetchJSON(url) {
-    if (process.browser) {
-      return window.fetch(url).then((response) => (response.json()))
-    } else {
-      const request = require('request-promise');
-      return request({ uri: url, json: true })
-    }
-  }
-
-  /**
-   * Loads the cached datafile from localStorage in the browser environment
-   * Does not do anything in the node environment
-   *
-   * @param {string} sdkKey helps construct the key of where to cache the datafile in localStorage
-   * @returns {JSON} cached datafile JSON
-   */
-  _loadCachedDatafile(sdkKey) {
-    if (process.browser) {
-      let datafile
-      try {
-        datafile = JSON.parse(window.localStorage.getItem(`optimizelyDatafile-${sdkKey}`))
-      } catch (error) {
-        this.logger.log(this.LOG_LEVELS.DEBUG, `MANAGER: Unable to parse cached datafile json. Try clearing your localStorage. Received error: ${error}`)
-      }
-      return datafile
-    }
-  }
-
-  /**
-   * Caches the provided datafile into localStorage in the browser environment
-   * Does not do anything in the node environment
-   *
-   * @param {string} sdkKey helps construct the key of where to cache the datafile in localStorage
-   * @param {JSON} datafile to store in localstorage
-   */
-  _cacheDatafile(sdkKey, datafile) {
-    if (process.browser) {
-      window.localStorage.setItem(`optimizelyDatafile-${sdkKey}`, JSON.stringify(datafile))
-    }
   }
 
   /**
@@ -163,14 +133,14 @@ class OptimizelyManager {
   }
 
   /**
-   * _getDefaultUrl
+   * close
    *
-   * Provides the standard Optimizely url to the datafile
-   *
-   * @param {string} sdkKey sdk key for the given project / environment
+   * stops any active datafile management background tasks
    */
-  _getDefaultUrl(sdkKey) {
-    return `https://cdn.optimizely.com/datafiles/${sdkKey}.json`;
+  close() {
+    if (this.datafileRequestInterval) {
+      clearInterval(this.datafileRequestInterval)
+    }
   }
 }
 
@@ -239,7 +209,7 @@ class Singleton {
   /**
    * getClient
    *
-   * Get a reference to the singleton OptimizelyManager instance
+   * Get a reference to the singleton optimizely instance
    * @returns {Object} an OptimizelyManager instance
    */
   getClient() {

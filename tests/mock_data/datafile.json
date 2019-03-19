@@ -1,0 +1,186 @@
+{
+  "version":"4",
+  "rollouts":[
+    {
+      "experiments":[
+        {
+          "status":"Running",
+          "audienceIds":[
+
+          ],
+          "variations":[
+            {
+              "variables":[
+                {
+                  "id":"12875720176",
+                  "value":"2"
+                }
+              ],
+              "id":"12873690220",
+              "key":"12873690220",
+              "featureEnabled":true
+            }
+          ],
+          "id":"12902410346",
+          "key":"12902410346",
+          "layerId":"12879840167",
+          "trafficAllocation":[
+            {
+              "entityId":"12873690220",
+              "endOfRange":10000
+            }
+          ],
+          "forcedVariations":{
+
+          }
+        }
+      ],
+      "id":"12879840167"
+    }
+  ],
+  "typedAudiences":[
+
+  ],
+  "anonymizeIP":false,
+  "projectId":"7511913042",
+  "variables":[
+
+  ],
+  "featureFlags":[
+    {
+      "experimentIds":[
+
+      ],
+      "rolloutId":"12879840167",
+      "variables":[
+        {
+          "defaultValue":"2",
+          "type":"integer",
+          "id":"12875720176",
+          "key":"items"
+        }
+      ],
+      "id":"12885680340",
+      "key":"checkout_flow"
+    }
+  ],
+  "experiments":[
+    {
+      "status":"Running",
+      "audienceIds":[
+
+      ],
+      "variations":[
+        {
+          "variables":[
+
+          ],
+          "id":"10549630572",
+          "key":"full_page_hero"
+        },
+        {
+          "variables":[
+
+          ],
+          "id":"10515097022",
+          "key":"sign_in_popup"
+        }
+      ],
+      "id":"10517679195",
+      "key":"homepage_experiment",
+      "layerId":"10522494761",
+      "trafficAllocation":[
+        {
+          "entityId":"10515097022",
+          "endOfRange":5000
+        },
+        {
+          "entityId":"10549630572",
+          "endOfRange":10000
+        }
+      ],
+      "forcedVariations":{
+
+      }
+    }
+  ],
+  "audiences":[
+    {
+      "id":"11109080275",
+      "conditions":"[\"and\", [\"or\", [\"or\", {\"name\": \"vip\", \"type\": \"custom_attribute\", \"value\": \"true\"}]]]",
+      "name":"VIP Users"
+    },
+    {
+      "conditions":"[\"or\", {\"match\": \"exact\", \"name\": \"$opt_dummy_attribute\", \"type\": \"custom_attribute\", \"value\": \"$opt_dummy_value\"}]",
+      "id":"$opt_dummy_audience",
+      "name":"Optimizely-Generated Audience for Backwards Compatibility"
+    }
+  ],
+  "groups":[
+    {
+      "policy":"random",
+      "trafficAllocation":[
+
+      ],
+      "experiments":[
+        {
+          "status":"Running",
+          "audienceIds":[
+            "11109080275"
+          ],
+          "variations":[
+            {
+              "variables":[
+
+              ],
+              "id":"10521243587",
+              "key":"credit_card"
+            },
+            {
+              "variables":[
+
+              ],
+              "id":"10541121674",
+              "key":"crytpo"
+            }
+          ],
+          "id":"10528214428",
+          "key":"checkout_experiment",
+          "layerId":"10519217010",
+          "trafficAllocation":[
+            {
+              "entityId":"10521243587",
+              "endOfRange":5000
+            },
+            {
+              "entityId":"10541121674",
+              "endOfRange":10000
+            }
+          ],
+          "forcedVariations":{
+
+          }
+        }
+      ],
+      "id":"11079840758"
+    }
+  ],
+  "attributes":[
+    {
+      "id":"11116170388",
+      "key":"vip"
+    }
+  ],
+  "botFiltering":false,
+  "accountId":"7458871128",
+  "events":[
+    {
+      "experimentIds":[
+        "10528214428"
+      ],
+      "id":"11085880253",
+      "key":"purchase"
+    }
+  ],
+  "revision":"22"
+}
