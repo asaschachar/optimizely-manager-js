@@ -14,7 +14,7 @@ const OptimizelyManager = require('@optimizely/optimizely-manager');
 OptimizelyManager.withSdk(OptimizelySdk);
 OptimizelyManager.configure({
   logLevel: OptimizelySdk.enums.LOG_LEVEL.DEBUG,
-  sdkKey: 'Ly8FQj6vSaDcZUjySoWnWz',
+  sdkKey: '<YOUR_SDK_KEY>',
 })
 ```
 
