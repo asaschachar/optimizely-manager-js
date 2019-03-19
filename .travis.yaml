@@ -1,0 +1,15 @@
+language: node_js
+
+jobs:
+  include:
+    - stage: test
+      script: npm run test
+    - stage: build
+      script: npm run build
+    - stage: deploy
+      script: echo 'not implemented'
+
+stages:
+  - test
+  - build
+  - deploy
