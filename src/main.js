@@ -122,7 +122,7 @@ class OptimizelyManager {
     if (process.browser) {
       let datafile
       try {
-        datafile = JSON.parse(window.localStorage.get(`optimizelyDatafile-${sdkKey}`))
+        datafile = JSON.parse(window.localStorage.getItem(`optimizelyDatafile-${sdkKey}`))
       } catch (error) {
         this.logger.log(this.LOG_LEVELS.DEBUG, `MANAGER: Unable to parse cached datafile json. Try clearing your localStorage. Received error: ${error}`)
       }
@@ -139,7 +139,7 @@ class OptimizelyManager {
    */
   _cacheDatafile(sdkKey, datafile) {
     if (process.browser) {
-      window.localStorage.set(`optimizelyDatafile-${sdkKey}`, JSON.stringify(datafile))
+      window.localStorage.setItem(`optimizelyDatafile-${sdkKey}`, JSON.stringify(datafile))
     }
   }
 
