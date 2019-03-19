@@ -6,9 +6,7 @@ node_js:
 jobs:
   include:
     - stage: test
-      script: npm run test
-    - stage: coverage
-      script: npm run coveralls
+      script: npm run test && npm run coveralls
     - stage: build
       script: npm run build
     - stage: deploy
