@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const request = require('request-promise');
 
 /**
  * OptimizelyManager
@@ -109,6 +108,7 @@ class OptimizelyManager {
     if (process.browser) {
       return window.fetch(url).then((response) => (response.json()))
     } else {
+      const request = require('request-promise');
       return request({ uri: url, json: true })
     }
   }
