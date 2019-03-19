@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "test": "jest --coverage",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "build": "rollup -c > index.js; BROWSER=true rollup -c > browser.js"
   },
   "main": "index.js",
@@ -19,6 +20,7 @@
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "@optimizely/optimizely-sdk": "^3.0.1",
+    "coveralls": "^3.0.3",
     "jest": "^24.5.0",
     "rollup": "^1.4.1",
     "rollup-plugin-babel": "^4.3.2",
