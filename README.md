@@ -1,4 +1,4 @@
-# Optimizely Datafile Manager Node
+# Optimizely Datafile Manager JavaScript (Node & Browser)
 
 ## Installation
 ```
