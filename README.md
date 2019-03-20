@@ -30,5 +30,4 @@ const enabled = optimizely.isFeatureEnabled('sale_price');
 ```
 
 ## TODO
-- Add tests and attempt to get to 100% unit test coverage
 - Start separate ticket on figuring out how to put datafile on window variable
