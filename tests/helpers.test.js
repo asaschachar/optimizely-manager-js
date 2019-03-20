@@ -43,14 +43,6 @@ describe('helpers', () => {
       window.fetch = jest.fn().mockImplementation(() => Promise.resolve({
         json: () => ({})
       }))
-      window.localStorage.getItem = jest.fn().mockImplementation((key) => {
-          console.log('MOCKED 1')
-          return ('{version:4}')
-        })
-      window.localStorage.setItem= jest.fn().mockImplementation(() => {
-          console.log('MOCKED 2')
-          return undefined
-        })
       process.browser = true;
     })
 
@@ -65,19 +57,23 @@ describe('helpers', () => {
       });
     });
 
-    describe('loadCachedDatafile', () => {
-      test('requests the given url using fetch', () => {
-        expect(loadCachedDatafile('123')).toBe({ version: 4 })
+    describe('cacheDatafile', () => {
+      test('caches the datafile in localstorage', () => {
+        cacheDatafile('123', { version: 4 })
+        expect(localStorage.setItem).lastCalledWith(
+          'optimizelyDatafile-123',
+          '{\"version\":4}'
+        )
       });
     });
 
-    describe('cacheDatafile', () => {
-      test('requests the given url using fetch', () => {
-        cacheDatafile('123', { version: 4 })
-        expect(window.localStorage.setItem).lastCalledWith(
-          'optimizelyDatafile-123',
-          '{version:4}'
-        )
+    describe('loadCachedDatafile', () => {
+      beforeEach(() => {
+        localStorage.getItem.mockImplementation(() => ('{\"version\":4}'))
+      })
+
+      test('returns the datafile stored in localstorage', () => {
+        expect(loadCachedDatafile('123')).toEqual({ version: 4 })
       });
     });
   });

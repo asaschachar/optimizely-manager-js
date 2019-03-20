@@ -9,7 +9,7 @@
   },
   "jest": {
     "setupFiles": ["jest-localstorage-mock"]
-  }
+  },
   "main": "index.js",
   "browser": "browser.js",
   "keywords": [],

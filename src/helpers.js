@@ -22,8 +22,8 @@ export const fetchJSON = (url) => {
  */
 export const loadCachedDatafile = (sdkKey) => {
   if (process.browser) {
-    console.log(window.localStorage.getItem)
-    return JSON.parse(window.localStorage.getItem(`optimizelyDatafile-${sdkKey}`))
+    const datafile = localStorage.getItem(`optimizelyDatafile-${sdkKey}`)
+    return JSON.parse(datafile)
   }
 }
 
@@ -36,8 +36,7 @@ export const loadCachedDatafile = (sdkKey) => {
  */
 export const cacheDatafile = (sdkKey, datafile) => {
   if (process.browser) {
-    console.log(window.localStorage.setItem)
-    window.localStorage.setItem(`optimizelyDatafile-${sdkKey}`, JSON.stringify(datafile))
+    localStorage.setItem(`optimizelyDatafile-${sdkKey}`, JSON.stringify(datafile))
   }
 }
 
