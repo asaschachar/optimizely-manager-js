@@ -30,4 +30,7 @@ const enabled = optimizely.isFeatureEnabled('sale_price');
 ```
 
 ## TODO
+- Expose all APIs? Not just the rollouts ones?
+- In the case that we don't expose userId, you could call isFeatureEnabled and getEnabledFeatures and they'll return different things. Should the userId be random per instance of the manager rather than per call to isFeatureEnabled
 - Start separate ticket on figuring out how to put datafile on window variable
+
