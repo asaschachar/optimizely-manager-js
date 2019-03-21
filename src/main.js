@@ -94,7 +94,7 @@ class Singleton {
    */
   getClient() {
     if (!this.instance) {
-      throw new Error(`OPTIMIZELY MANAGER: You must call .configure() before .getClient()`)
+      throw new Error(`OptimizelyManager: You must call .configure() before .getClient()`)
     }
     return this.instance.optimizelyClientInstance;
   }
@@ -109,7 +109,7 @@ class Singleton {
    */
   onReady() {
     if (!this.instance) {
-      throw new Error(`OPTIMIZELY MANAGER: You must call .configure() before .onReady`)
+      throw new Error(`OptimizelyManager: You must call .configure() before .onReady`)
     }
     return this.instance.onReady;
   }
