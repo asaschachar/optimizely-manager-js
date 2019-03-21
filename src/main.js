@@ -39,16 +39,20 @@ class OptimizelyManager {
     const {
       sdkKey,
       datafileOptions,
+      datafile,
     } = sdkOptions;
 
-    const manager = new NodeDatafileManager({
+    // TODO: enable browser datafile manager
+    const DatafileManager = process.browser ? undefined : NodeDatafileManager
+
+    const manager = new DatafileManager({
       sdkKey: sdkKey,
       liveUpdates: datafileOptions && datafileOptions.liveUpdates,
       updateInterval: datafileOptions && datafileOptions.updateInterval,
     });
 
     this.sdkOptions = sdkOptions;
-    this.updateInstance({}, sdkOptions);
+    this.updateInstance(datafile || {}, sdkOptions);
     this.onReady = manager.onReady()
 
     manager.on('update', () => { return this.updateInstance(JSON.parse(manager.get())) });

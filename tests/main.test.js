@@ -20,7 +20,7 @@ describe('OptimizelyManager', () => {
           datafile: fakeDatafile
         })
         const optimizely = OptimizelyManager.getClient();
-        const enabled = optimizely.isFeatureEnabled('checkout_flow')
+        const enabled = optimizely.isFeatureEnabled('checkout_flow', 'user123')
         expect(enabled).toBe(true);
       });
     });
