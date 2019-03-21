@@ -1,6 +1,6 @@
 {
   "name": "@optimizely/optimizely-manager",
-  "version": "3.1.4",
+  "version": "4.0.0",
   "description": "",
   "scripts": {
     "test": "jest --coverage",
@@ -14,13 +14,9 @@
   },
   "main": "index.js",
   "browser": "browser.js",
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
-    "@optimizely/datafile-manager": "^0.1.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "@optimizely/datafile-manager": "^0.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
