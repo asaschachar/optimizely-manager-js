@@ -15,7 +15,6 @@ At your application startup:
 const OptimizelyManager = require('@optimizely/optimizely-manager');
 
 OptimizelyManager.configure({
-  logLevel: OptimizelySdk.enums.LOG_LEVEL.DEBUG,
   sdkKey: '<YOUR_SDK_KEY>',
 })
 ```
