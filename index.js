@@ -173,9 +173,9 @@ class OptimizelyManager {
   }
 
   getClient() {
-    return { ...this.optimizelyClientInstance,
+    return Object.assign(this.optimizelyClientInstance, {
       isFeatureEnabled: this.isFeatureEnabled.bind(this)
-    };
+    });
   }
   /**
    * close

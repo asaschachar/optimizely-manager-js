@@ -132,10 +132,10 @@ class OptimizelyManager {
   }
 
   getClient() {
-    return {
-      ...this.optimizelyClientInstance,
-      isFeatureEnabled: this.isFeatureEnabled.bind(this),
-    }
+    return Object.assign(
+      this.optimizelyClientInstance,
+      { isFeatureEnabled: this.isFeatureEnabled.bind(this) }
+    )
   }
 
   /**
