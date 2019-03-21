@@ -8,7 +8,7 @@
  */
 const fetchJSON = url => {
   {
-    return window.fetch(url).then(response => response.json());
+    const fetchPromise = window.fetch(url).then(response => response.json());
   }
 };
 /**
@@ -21,7 +21,8 @@ const fetchJSON = url => {
 
 const loadCachedDatafile = sdkKey => {
   {
-    return JSON.parse(window.localStorage.getItem(`optimizelyDatafile-${sdkKey}`));
+    const datafile = localStorage.getItem(`optimizelyDatafile-${sdkKey}`);
+    return JSON.parse(datafile);
   }
 };
 /**
@@ -34,8 +35,28 @@ const loadCachedDatafile = sdkKey => {
 
 const cacheDatafile = (sdkKey, datafile) => {
   {
-    window.localStorage.setItem(`optimizelyDatafile-${sdkKey}`, JSON.stringify(datafile));
+    localStorage.setItem(`optimizelyDatafile-${sdkKey}`, JSON.stringify(datafile));
   }
+};
+/**
+ * getDefaultUrl
+ *
+ * Provides the standard Optimizely url to the datafile
+ *
+ * @param {string} sdkKey sdk key for the given project / environment
+ */
+
+const getDefaultUrl = sdkKey => {
+  return `https://cdn.optimizely.com/datafiles/${sdkKey}.json`;
+};
+/**
+ * pollForDatafile
+ *
+ * Wrapper around setInterval for testing purposes
+ */
+
+const pollForDatafile = (callback, interval) => {
+  return setInterval(callback, interval);
 };
 
 /**
@@ -50,8 +71,7 @@ const cacheDatafile = (sdkKey, datafile) => {
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permissions and * limitations under the License.
  */
 
 class OptimizelyManager {
@@ -90,7 +110,7 @@ class OptimizelyManager {
       datafile: datafile,
       ...this.sdkOptions
     });
-    const datafileUrl = datafileOptions && datafileOptions.getUrl ? datafileOptions.getUrl(sdkKey) : this._getDefaultUrl(sdkKey);
+    const datafileUrl = datafileOptions && datafileOptions.getUrl ? datafileOptions.getUrl(sdkKey) : getDefaultUrl(sdkKey);
 
     this._requestDatafile(datafileUrl);
 
@@ -104,7 +124,7 @@ class OptimizelyManager {
 
     if (liveUpdates) {
       const updateInterval = datafileOptions && datafileOptions.updateInterval || 1000;
-      setInterval(this._requestDatafile.bind(this, datafileUrl), updateInterval);
+      this.datafileRequestInterval = pollForDatafile(this._requestDatafile.bind(this, datafileUrl), updateInterval);
     }
   }
   /**
@@ -153,17 +173,23 @@ class OptimizelyManager {
 
     return this.optimizelyClientInstance.isFeatureEnabled(featureKey, userId);
   }
+
+  getClient() {
+    return { ...this.optimizelyClientInstance,
+      isFeatureEnabled: this.isFeatureEnabled.bind(this)
+    };
+  }
   /**
-   * _getDefaultUrl
+   * close
    *
-   * Provides the standard Optimizely url to the datafile
-   *
-   * @param {string} sdkKey sdk key for the given project / environment
+   * stops any active datafile management background tasks
    */
 
 
-  _getDefaultUrl(sdkKey) {
-    return `https://cdn.optimizely.com/datafiles/${sdkKey}.json`;
+  close() {
+    if (this.datafileRequestInterval) {
+      clearInterval(this.datafileRequestInterval);
+    }
   }
 
 }
@@ -242,7 +268,7 @@ class Singleton {
 
 
   getClient() {
-    return this.instance;
+    return this.instance.getClient();
   }
 
 }
