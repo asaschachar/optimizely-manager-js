@@ -6,16 +6,14 @@
 
 ## Installation
 ```
-npm install --save git+https://git@github.com/asaschachar/optimizely-manager-js.git#v3.0.1
+npm install --save git+https://git@github.com/asaschachar/optimizely-manager-js.git#v4.0.0
 ```
 
 ## Setup
 At your application startup:
 ```javascript
-const OptimizelySdk = require('@optimizely/optimizely-sdk');
 const OptimizelyManager = require('@optimizely/optimizely-manager');
 
-OptimizelyManager.withSdk(OptimizelySdk);
 OptimizelyManager.configure({
   logLevel: OptimizelySdk.enums.LOG_LEVEL.DEBUG,
   sdkKey: '<YOUR_SDK_KEY>',
@@ -26,7 +24,7 @@ OptimizelyManager.configure({
 When you want to use a feature flag:
 ```javascript
 const optimizely = OptimizelyManager.getClient();
-const enabled = optimizely.isFeatureEnabled('sale_price');
+const enabled = optimizely.isFeatureEnabled('sale_price', 'user123');
 ```
 
 ## TODO
