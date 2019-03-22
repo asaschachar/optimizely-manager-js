@@ -42,8 +42,12 @@ const enabled = optimizely.isFeatureEnabled('sale_price', 'user123');
 
 
 ## Usage
-When you want to use a feature flag:
+Option1: When you want to use a feature flag:
 ```javascript
-const optimizely = OptimizelyManager.getClient();
-const enabled = optimizely.isFeatureEnabled('sale_price', 'user123');
+renderHeader() {
+  const optimizely = OptimizelyManager.getClient();
+  const enabled = optimizely.isFeatureEnabled('sale_price', 'user123');
+  
+  return enabled && <Header /> 
+}
 ```
