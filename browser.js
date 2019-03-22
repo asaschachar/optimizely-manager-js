@@ -40,17 +40,17 @@ const {
 
 class OptimizelyManager {
   constructor(sdkOptions) {
-    const {
+    let {
       sdkKey,
       datafileOptions,
       datafile
-    } = sdkOptions; // TODO: enable browser datafile manager
+    } = sdkOptions;
+    datafileOptions = datafileOptions || {}; // TODO: enable browser datafile manager
 
     const DatafileManager = undefined;
     const manager = new DatafileManager({
-      sdkKey: sdkKey,
-      liveUpdates: datafileOptions && datafileOptions.liveUpdates,
-      updateInterval: datafileOptions && datafileOptions.updateInterval
+      sdkKey,
+      ...datafileOptions
     });
     this.sdkOptions = sdkOptions;
     this.updateInstance(datafile || {}, sdkOptions);
@@ -104,7 +104,7 @@ class Singleton {
 
   getClient() {
     if (!this.instance) {
-      throw new Error(`OPTIMIZELY MANAGER: You must call .configure() before .getClient()`);
+      throw new Error(`OptimizelyManager: You must call .configure() before .getClient()`);
     }
 
     return this.instance.optimizelyClientInstance;
@@ -120,7 +120,7 @@ class Singleton {
 
   onReady() {
     if (!this.instance) {
-      throw new Error(`OPTIMIZELY MANAGER: You must call .configure() before .onReady`);
+      throw new Error(`OptimizelyManager: You must call .configure() before .onReady`);
     }
 
     return this.instance.onReady;

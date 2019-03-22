@@ -36,20 +36,18 @@ const { NodeDatafileManager } = require('@optimizely/datafile-manager');
 class OptimizelyManager {
   constructor(sdkOptions) {
 
-    const {
+    let {
       sdkKey,
       datafileOptions,
       datafile,
     } = sdkOptions;
 
+    datafileOptions = datafileOptions || {}
+
     // TODO: enable browser datafile manager
     const DatafileManager = process.browser ? undefined : NodeDatafileManager
 
-    const manager = new DatafileManager({
-      sdkKey: sdkKey,
-      liveUpdates: datafileOptions && datafileOptions.liveUpdates,
-      updateInterval: datafileOptions && datafileOptions.updateInterval,
-    });
+    const manager = new DatafileManager({ sdkKey, ...datafileOptions });
 
     this.sdkOptions = sdkOptions;
     this.updateInstance(datafile || {}, sdkOptions);
