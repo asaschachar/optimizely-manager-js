@@ -19,6 +19,15 @@ OptimizelyManager.configure({
 })
 ```
 
+In another file
+```javascript
+const OptimizelyManager = require('@optimizely/optimizely-manager');
+const optimizely = OptimizelyManager.getClient();
+const enabled = optimizely.isFeatureEnabled('sale_price', 'user123');
+
+```
+
+
 ## Usage
 When you want to use a feature flag:
 ```javascript
