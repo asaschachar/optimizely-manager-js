@@ -9,6 +9,15 @@
 npm install --save git+https://git@github.com/asaschachar/optimizely-manager-js.git#v4.0.1
 ```
 
+
+```javascript
+const { OptimizelySingleton, createInstance } = require('@optimizely/optimizely-sdk');
+
+OptimizelySingleton.configure({
+  sdkKey: '<YOUR_SDK_KEY>',
+})
+```
+
 ## Setup
 At your application startup:
 ```javascript
