@@ -16,6 +16,10 @@ const { OptimizelySingleton, createInstance } = require('@optimizely/optimizely-
 OptimizelySingleton.configure({
   sdkKey: '<YOUR_SDK_KEY>',
 })
+
+OptimizelySingleton.getClient()
+
+OptimizelySingleton.getLiveClient()
 ```
 
 ## Setup
