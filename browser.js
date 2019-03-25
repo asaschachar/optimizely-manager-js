@@ -48,7 +48,7 @@ class OptimizelyManager {
     } = sdkOptions;
     datafileOptions = datafileOptions || {}; // TODO: enable browser datafile manager
 
-    const DatafileManager = NodeDatafileManager;
+    const DatafileManager = undefined;
     const manager = new DatafileManager({
       sdkKey,
       ...datafileOptions

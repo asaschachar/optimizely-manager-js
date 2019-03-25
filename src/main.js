@@ -40,6 +40,7 @@ class OptimizelyManager {
       sdkKey,
       datafileOptions,
       datafile,
+      logLevel,
     } = sdkOptions;
 
     datafileOptions = datafileOptions || {}
@@ -52,6 +53,7 @@ class OptimizelyManager {
     this.sdkOptions = sdkOptions;
     this.updateInstance(datafile || {}, sdkOptions);
     this.onReady = manager.onReady()
+    this.logger = OptimizelySdk.logging.createLogger({ logLevel })
 
     manager.on('update', () => { return this.updateInstance(JSON.parse(manager.get())) });
     manager.onReady().then(() => { return this.updateInstance(JSON.parse(manager.get())) });
@@ -64,7 +66,7 @@ class OptimizelyManager {
       console.log('Loading Optimizely datafile revision:', datafile.revision)
     }
     // TODO: enable logging?
-    this.optimizelyClientInstance = OptimizelySdk.createInstance({ datafile: datafile, ...this.sdkOptions });
+    this.optimizelyClientInstance = OptimizelySdk.createInstance({ datafile: datafile, logger: this.logger, ...this.sdkOptions });
   }
 }
 
