@@ -63,6 +63,7 @@ class OptimizelyManager {
     if (datafile.revision) {
       console.log('Loading Optimizely datafile revision:', datafile.revision)
     }
+    // TODO: enable logging?
     this.optimizelyClientInstance = OptimizelySdk.createInstance({ datafile: datafile, ...this.sdkOptions });
   }
 }
