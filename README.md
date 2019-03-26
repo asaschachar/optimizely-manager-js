@@ -34,7 +34,6 @@ OptimizelyManager.configure({
 
 In another file
 ```javascript
-const OptimizelyManager = require('@optimizely/optimizely-manager');
 const optimizely = OptimizelyManager.getClient();
 const enabled = optimizely.isFeatureEnabled('sale_price', 'user123');
 
