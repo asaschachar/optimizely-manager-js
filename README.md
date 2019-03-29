@@ -33,6 +33,8 @@ The OptimizelyManager is a convenient wrapper around the Optimizely SDK, which p
 ## How it works
 Upon passing in an sdkKey, the OptimizelyManager starts polling at an interval for the datafile, a file on Optimizely's CDN containing all the feature configuration saved in the Optimizely UI.
 
+Once receiving a new datafile, the OptimizelyManager instantiates a new instance of Optimizely which is available via the `.getClient()` method.
+
 ## When to use just the SDK
 If you want more control over when and how an instance of the Optimizely SDK gets created, just the Optimizely JavaScript SDK.
 
