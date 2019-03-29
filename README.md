@@ -26,7 +26,6 @@ const enabled = optimizely.isFeatureEnabled('sale_price', 'user123');
 
 ```
 
-
 ## What is the Optimizely Manager
 The OptimizelyManager is a convenient wrapper around the Optimizely SDK, which provides a simpler interface for instantiating and using Optimizely.
 
