@@ -9,19 +9,6 @@
 npm install --save git+https://git@github.com/asaschachar/optimizely-manager-js.git#v4.0.1
 ```
 
-
-```javascript
-const { OptimizelySingleton, createInstance } = require('@optimizely/optimizely-sdk');
-
-OptimizelySingleton.configure({
-  sdkKey: '<YOUR_SDK_KEY>',
-})
-
-OptimizelySingleton.getClient()
-
-OptimizelySingleton.getLiveClient()
-```
-
 ## Setup
 At your application startup:
 ```javascript
@@ -40,13 +27,13 @@ const enabled = optimizely.isFeatureEnabled('sale_price', 'user123');
 ```
 
 
-## Usage
-Option1: When you want to use a feature flag:
-```javascript
-renderHeader() {
-  const optimizely = OptimizelyManager.getClient();
-  const enabled = optimizely.isFeatureEnabled('sale_price', 'user123');
-  
-  return enabled && <Header /> 
-}
-```
+## What is the Optimizely Manager
+The OptimizelyManager is a convenient wrapper around the Optimizely SDK, which provides a simpler interface for instantiating and using Optimizely.
+
+## How it works
+Upon passing in an sdkKey, the OptimizelyManager starts polling at an interval for the datafile, a file on Optimizely's CDN containing all the feature configuration saved in the Optimizely UI.
+
+## When to use just the SDK
+If you want more control over when and how an instance of the Optimizely SDK gets created, just the Optimizely JavaScript SDK.
+
+
