@@ -51,8 +51,8 @@ class OptimizelyManager {
     this.updateInstance(datafile || {}, sdkOptions);
     this.onReady = manager.onReady()
 
-    manager.on('update', () => { return this.updateInstance(JSON.parse(manager.get())) });
-    manager.onReady().then(() => { return this.updateInstance(JSON.parse(manager.get())) });
+    manager.on('update', () => { return this.updateInstance(manager.get()) });
+    manager.onReady().then(() => { return this.updateInstance(manager.get()) });
 
     manager.start();
   }

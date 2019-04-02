@@ -1,5 +1,39 @@
 'use strict';
 
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    var ownKeys = Object.keys(source);
+
+    if (typeof Object.getOwnPropertySymbols === 'function') {
+      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+      }));
+    }
+
+    ownKeys.forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    });
+  }
+
+  return target;
+}
+
 /**
  * Copyright 2016-2017, Optimizely
  *
@@ -47,18 +81,17 @@ class OptimizelyManager {
       logLevel
     } = sdkOptions;
     datafileOptions = datafileOptions || {};
-    const manager = new DatafileManager({
-      sdkKey,
-      ...datafileOptions
-    });
+    const manager = new DatafileManager(_objectSpread({
+      sdkKey
+    }, datafileOptions));
     this.sdkOptions = sdkOptions;
     this.updateInstance(datafile || {}, sdkOptions);
     this.onReady = manager.onReady();
     manager.on('update', () => {
-      return this.updateInstance(JSON.parse(manager.get()));
+      return this.updateInstance(manager.get());
     });
     manager.onReady().then(() => {
-      return this.updateInstance(JSON.parse(manager.get()));
+      return this.updateInstance(manager.get());
     });
     manager.start();
   }
@@ -69,10 +102,9 @@ class OptimizelyManager {
     } // TODO: enable logging?
 
 
-    this.optimizelyClientInstance = OptimizelySdk.createInstance({
-      datafile: datafile,
-      ...this.sdkOptions
-    });
+    this.optimizelyClientInstance = OptimizelySdk.createInstance(_objectSpread({
+      datafile: datafile
+    }, this.sdkOptions));
   }
 
 }
