@@ -31,7 +31,7 @@
  * @param {Function} options.datafileOptions.getUrl function which will be given SDK as an argument and should return the url from which datafiles can be fetched
  */
 const OptimizelySdk = require('@optimizely/optimizely-sdk');
-const { NodeDatafileManager } = require('@optimizely/datafile-manager');
+const { DatafileManager } = require('@optimizely/js-sdk-datafile-manager');
 
 class OptimizelyManager {
   constructor(sdkOptions) {
@@ -45,15 +45,11 @@ class OptimizelyManager {
 
     datafileOptions = datafileOptions || {}
 
-    // TODO: enable browser datafile manager
-    const DatafileManager = process.browser ? undefined : NodeDatafileManager
-
     const manager = new DatafileManager({ sdkKey, ...datafileOptions });
 
     this.sdkOptions = sdkOptions;
     this.updateInstance(datafile || {}, sdkOptions);
     this.onReady = manager.onReady()
-    this.logger = OptimizelySdk.logging.createLogger({ logLevel })
 
     manager.on('update', () => { return this.updateInstance(JSON.parse(manager.get())) });
     manager.onReady().then(() => { return this.updateInstance(JSON.parse(manager.get())) });
@@ -66,7 +62,7 @@ class OptimizelyManager {
       console.log('Loading Optimizely datafile revision:', datafile.revision)
     }
     // TODO: enable logging?
-    this.optimizelyClientInstance = OptimizelySdk.createInstance({ datafile: datafile, logger: this.logger, ...this.sdkOptions });
+    this.optimizelyClientInstance = OptimizelySdk.createInstance({ datafile: datafile, ...this.sdkOptions });
   }
 }
 
@@ -113,6 +109,15 @@ class Singleton {
       throw new Error(`OptimizelyManager: You must call .configure() before .onReady`)
     }
     return this.instance.onReady;
+  }
+
+  /**
+   * _reset
+   *
+   * Resets the singleton instance for testing purposes
+   */
+  _reset() {
+    this.instance = null;
   }
 }
 

@@ -15,12 +15,12 @@
   "main": "index.js",
   "license": "ISC",
   "dependencies": {
-    "@optimizely/datafile-manager": "^0.1.0"
+    "@optimizely/optimizely-sdk": "^3.0.1",
+    "@optimizely/js-sdk-datafile-manager": "^0.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
-    "@optimizely/optimizely-sdk": "^3.0.1",
     "coveralls": "^3.0.3",
     "jest": "^24.5.0",
     "jest-localstorage-mock": "^2.4.0",
