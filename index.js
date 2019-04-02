@@ -35,8 +35,8 @@
 const OptimizelySdk = require('@optimizely/optimizely-sdk');
 
 const {
-  NodeDatafileManager
-} = require('@optimizely/datafile-manager');
+  DatafileManager
+} = require('@optimizely/js-sdk-datafile-manager');
 
 class OptimizelyManager {
   constructor(sdkOptions) {
@@ -46,9 +46,7 @@ class OptimizelyManager {
       datafile,
       logLevel
     } = sdkOptions;
-    datafileOptions = datafileOptions || {}; // TODO: enable browser datafile manager
-
-    const DatafileManager = NodeDatafileManager;
+    datafileOptions = datafileOptions || {};
     const manager = new DatafileManager({
       sdkKey,
       ...datafileOptions
@@ -56,9 +54,6 @@ class OptimizelyManager {
     this.sdkOptions = sdkOptions;
     this.updateInstance(datafile || {}, sdkOptions);
     this.onReady = manager.onReady();
-    this.logger = OptimizelySdk.logging.createLogger({
-      logLevel
-    });
     manager.on('update', () => {
       return this.updateInstance(JSON.parse(manager.get()));
     });
@@ -76,7 +71,6 @@ class OptimizelyManager {
 
     this.optimizelyClientInstance = OptimizelySdk.createInstance({
       datafile: datafile,
-      logger: this.logger,
       ...this.sdkOptions
     });
   }
@@ -130,6 +124,16 @@ class Singleton {
     }
 
     return this.instance.onReady;
+  }
+  /**
+   * _reset
+   *
+   * Resets the singleton instance for testing purposes
+   */
+
+
+  _reset() {
+    this.instance = null;
   }
 
 }
